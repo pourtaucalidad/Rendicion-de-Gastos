@@ -25,7 +25,12 @@
   .who{font-size:12.5px; color:var(--ink-45); margin-top:4px;}
   .who button{background:none; border:none; color:var(--rust-deep); font-weight:600; cursor:pointer; padding:0; font-family:var(--font-body); font-size:12.5px; text-decoration:underline;}
 
-  .ticket{position:relative; background:var(--white); border-radius:var(--radius); padding:18px 20px 20px; margin:16px 0 18px;
+  .navtabs{display:flex; gap:6px; background:var(--ink-10); padding:4px; border-radius:11px; margin-bottom:16px;}
+  .navtab{flex:1; text-align:center; padding:10px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer;
+    color:var(--ink-70); border:none; background:transparent; font-family:var(--font-body);}
+  .navtab.active{background:var(--white); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.08);}
+
+  .ticket{position:relative; background:var(--white); border-radius:var(--radius); padding:18px 20px 20px; margin:0 0 18px;
     box-shadow:0 1px 0 var(--ink-10), 0 10px 24px -18px rgba(29,59,54,.35); border:1px solid var(--ink-10);}
   .ticket::before,.ticket::after{content:""; position:absolute; width:18px; height:18px; border-radius:50%; background:var(--paper); top:calc(100% - 9px);}
   .ticket::before{left:-9px;} .ticket::after{right:-9px;}
@@ -52,8 +57,8 @@
   .row2{display:flex; gap:10px;} .row2>div{flex:1;}
 
   .photo-drop{border:1.5px dashed var(--ink-20); border-radius:11px; padding:18px; text-align:center; background:var(--paper);
-    cursor:pointer; margin-bottom:12px;}
-  .photo-drop img{max-width:100%; max-height:220px; border-radius:8px; margin-bottom:8px; display:block; margin:0 auto 8px;}
+    cursor:pointer; margin-bottom:12px; display:block;}
+  .photo-drop img{max-width:100%; max-height:220px; border-radius:8px; display:block; margin:0 auto 8px;}
   .photo-drop .hint{font-size:13px; color:var(--ink-45);} .photo-drop .hint strong{color:var(--ink-70);}
 
   .checkline{display:flex; align-items:center; gap:8px; font-size:14px; margin:10px 0 14px;}
@@ -64,6 +69,7 @@
   button.primary:disabled{opacity:.5; cursor:default;}
   button.secondary{width:100%; padding:11px; border-radius:10px; border:1.5px solid var(--ink-20); background:transparent;
     color:var(--ink); font-weight:600; font-size:14px; cursor:pointer; font-family:var(--font-body); margin-top:8px;}
+  button.secondary:disabled{opacity:.5; cursor:default;}
   button.ghost{background:transparent; border:none; color:var(--rust-deep); font-weight:600; font-size:13px; cursor:pointer;
     font-family:var(--font-body); padding:6px 0;}
   .status{font-size:13px; color:var(--ink-45); margin-top:8px; min-height:16px;}
@@ -99,12 +105,24 @@
   .stat .l{font-size:10.5px; color:var(--ink-45); text-transform:uppercase; letter-spacing:.05em; margin-top:2px;}
   .stat.warn .n{color:var(--amber);}
 
-  .copybox{display:none; margin-top:12px;}
-  .copybox textarea{width:100%; height:110px; font-family:var(--font-mono); font-size:12px; resize:vertical;}
-  .colbtns{display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;}
-  .colbtns button{flex:1; min-width:70px; padding:8px 6px; border-radius:8px; border:1px solid var(--ink-20); background:var(--white);
-    font-size:12px; font-weight:600; cursor:pointer; color:var(--ink-70);}
-  .note-small{font-size:12px; color:var(--ink-45); margin-top:10px; line-height:1.5;}
+  .saved-note{background:var(--sage-bg); border-radius:10px; padding:11px 13px; font-size:12.5px; color:var(--ink-70); line-height:1.5; margin-bottom:14px;}
+
+  /* Reporte */
+  .yearnav{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .yearnav button{background:none; border:1px solid var(--ink-20); border-radius:8px; width:32px; height:32px; cursor:pointer; font-size:15px; color:var(--ink);}
+  .yearnav .ylabel{font-family:var(--font-display); font-weight:600; font-size:18px;}
+  .mes-row{display:grid; grid-template-columns:76px 1fr 90px; align-items:center; gap:8px; padding:7px 2px; border-bottom:1px solid var(--ink-10);}
+  .mes-row:last-child{border-bottom:none;}
+  .mes-row.zero{opacity:.4;}
+  .mes-name{font-size:13px; font-weight:600; text-transform:capitalize;}
+  .mes-name small{display:block; font-weight:400; color:var(--ink-45); font-size:10.5px; text-transform:none;}
+  .bar-track{background:var(--ink-10); height:8px; border-radius:4px; overflow:hidden;}
+  .bar-fill{background:var(--sage); height:100%; border-radius:4px;}
+  .mes-amount{font-family:var(--font-mono); font-size:12.5px; text-align:right;}
+  .concepto-row{display:flex; justify-content:space-between; align-items:baseline; padding:7px 2px; border-bottom:1px solid var(--ink-10); font-size:13.5px;}
+  .concepto-row:last-child{border-bottom:none;}
+  .concepto-row .cr-amount{font-family:var(--font-mono); font-weight:600; font-size:13px;}
+  .concepto-row .cr-pct{font-size:11px; color:var(--ink-45); margin-left:6px;}
 
   .gate{position:fixed; inset:0; background:var(--paper); display:flex; align-items:center; justify-content:center; padding:20px; z-index:50;}
   .gate .card{max-width:340px; width:100%;}
@@ -118,7 +136,7 @@
   <div class="card">
     <h2>Antes de arrancar</h2>
     <div class="field"><label>Tu nombre</label><input type="text" id="gateNombre" placeholder="Ej: Malena Medina"></div>
-    <div class="field" id="gatePinField"><label>PIN del equipo (te lo pasa quien armó la app)</label><input type="text" id="gatePin" placeholder="••••"></div>
+    <div class="field"><label>PIN del equipo</label><input type="text" id="gatePin" placeholder="••••"></div>
     <button class="primary" id="gateBtn">Entrar</button>
     <div class="status" id="gateStatus"></div>
   </div>
@@ -128,96 +146,129 @@
   <header>
     <div class="eyebrow">Grupo Pourtau · Calidad</div>
     <h1>Rendición de gastos</h1>
-    <p class="subline">Cargá cada gasto en el momento, controlá contra el sobre al final.</p>
+    <p class="subline">Cargá cada gasto en el momento.</p>
     <p class="who">Entrando como <strong id="whoName"></strong> · <button id="changeWho">cambiar</button></p>
   </header>
 
-  <div class="ticket">
-    <div class="ticket-row">
-      <div><div class="ticket-label">Próxima rendición</div><div class="countdown" id="countdownText">—</div></div>
-      <div style="text-align:right"><div class="ticket-label">Total del mes</div><div class="ticket-total" id="ticketTotal">$ 0</div></div>
-    </div>
+  <div class="navtabs">
+    <button class="navtab active" id="navGastos">Gastos</button>
+    <button class="navtab" id="navReporte">Reporte</button>
   </div>
 
-  <div class="card">
-    <h2 id="formTitle">Cargar gasto</h2>
-    <div class="tabs">
-      <button class="tab active" data-tab="foto" id="tabFoto">📷 Foto del ticket</button>
-      <button class="tab" data-tab="manual" id="tabManual">✎ Manual</button>
+  <!-- ============ VISTA GASTOS ============ -->
+  <div id="viewGastos">
+    <div class="ticket">
+      <div class="ticket-row">
+        <div><div class="ticket-label">Próxima rendición</div><div class="countdown" id="countdownText">—</div></div>
+        <div style="text-align:right"><div class="ticket-label">Total del mes</div><div class="ticket-total" id="ticketTotal">$ 0</div></div>
+      </div>
     </div>
 
-    <div id="panelFoto">
-      <label class="photo-drop" for="photoInput">
-        <img id="photoPreview" style="display:none">
-        <div class="hint" id="photoHint"><strong>Sacar / subir foto</strong><br>del ticket o factura</div>
-      </label>
-      <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none">
-      <button class="primary" id="btnAnalizar" disabled>Analizar con IA</button>
-      <button class="secondary" id="btnSoloGuardarFoto" disabled>Guardar solo la foto (cargo los datos después)</button>
-      <div class="status" id="statusAnalizar"></div>
-    </div>
+    <div class="card">
+      <h2 id="formTitle">Cargar gasto</h2>
+      <div class="tabs">
+        <button class="tab active" id="tabFoto">📷 Foto del ticket</button>
+        <button class="tab" id="tabManual">✎ Manual</button>
+      </div>
 
-    <form id="gastoForm" style="display:none">
-      <div class="row2">
-        <div class="field"><label>Fecha</label><input type="date" id="fFecha" required></div>
-        <div class="field"><label>Concepto</label>
-          <select id="fConcepto">
-            <option>Almuerzo</option><option>Cena</option><option>Combustible</option>
-            <option>Estacionamiento</option><option>Hotel</option><option>Otros</option><option>Peaje</option>
-          </select>
+      <div id="panelFoto">
+        <label class="photo-drop" for="photoInput">
+          <img id="photoPreview" style="display:none">
+          <div class="hint" id="photoHint"><strong>Sacar / subir foto</strong><br>del ticket o factura</div>
+        </label>
+        <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none">
+        <button class="primary" id="btnSoloGuardarFoto" disabled>Guardar solo la foto (cargo los datos después)</button>
+        <button class="secondary" id="btnAnalizar" disabled>Analizar con IA</button>
+        <div class="status" id="statusAnalizar"></div>
+      </div>
+
+      <form id="gastoForm" style="display:none">
+        <div class="row2">
+          <div class="field"><label>Fecha</label><input type="date" id="fFecha" required></div>
+          <div class="field"><label>Concepto</label>
+            <select id="fConcepto">
+              <option>Almuerzo</option><option>Cena</option><option>Combustible</option>
+              <option>Estacionamiento</option><option>Hotel</option><option>Otros</option><option>Peaje</option>
+            </select>
+          </div>
         </div>
+        <div class="field"><label>Monto ($)</label><input type="number" id="fMonto" step="0.01" min="0" required placeholder="0,00"></div>
+        <div class="field"><label>Nota (opcional)</label><input type="text" id="fNota" placeholder="Ej: Almuerzo auditoría Sucursal Tandil"></div>
+        <div class="checkline"><input type="checkbox" id="fFactura" checked>
+          <label for="fFactura" style="margin:0; font-weight:500; color:var(--ink-70)">Tengo el comprobante físico (va al sobre)</label>
+        </div>
+        <button type="submit" class="primary" id="btnGuardar">Guardar gasto</button>
+        <button type="button" class="ghost" id="btnCancelarEdit" style="display:none">Cancelar edición</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="monthnav">
+        <button id="prevMonth">‹</button>
+        <div class="mlabel" id="monthLabel">—</div>
+        <button id="nextMonth">›</button>
       </div>
-      <div class="field"><label>Monto ($)</label><input type="number" id="fMonto" step="0.01" min="0" required placeholder="0,00"></div>
-      <div class="field"><label>Nota (opcional)</label><input type="text" id="fNota" placeholder="Ej: Almuerzo auditoría Sucursal Tandil"></div>
-      <div class="checkline"><input type="checkbox" id="fFactura" checked>
-        <label for="fFactura" style="margin:0; font-weight:500; color:var(--ink-70)">Tengo el comprobante físico (va al sobre)</label>
+      <div id="listContainer"></div>
+      <div class="totalbar"><div class="tb-label">Total</div><div class="tb-amount" id="listTotal">$ 0</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Control del sobre <span class="muted" id="prepMonthLabel"></span></h2>
+      <div class="stat-grid">
+        <div class="stat"><div class="n" id="statCount">0</div><div class="l">Gastos</div></div>
+        <div class="stat warn"><div class="n" id="statMissing">0</div><div class="l">Sin ticket</div></div>
+        <div class="stat"><div class="n" id="statTotal">$0</div><div class="l">Total</div></div>
       </div>
-      <button type="submit" class="primary" id="btnGuardar">Guardar gasto</button>
-      <button type="button" class="ghost" id="btnCancelarEdit" style="display:none">Cancelar edición</button>
-    </form>
+      <div class="saved-note" id="savedNote">Todo lo que cargás se escribe solo en la solapa del mes de tu planilla. Para presentarla, descargala desde la solapa <strong>Reporte</strong>.</div>
+      <button class="secondary" id="btnIrReporte">Ir a Reporte y descargar</button>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="monthnav">
-      <button id="prevMonth">‹</button>
-      <div class="mlabel" id="monthLabel">—</div>
-      <button id="nextMonth">›</button>
-    </div>
-    <div id="listContainer"></div>
-    <div class="totalbar"><div class="tb-label">Total</div><div class="tb-amount" id="listTotal">$ 0</div></div>
-  </div>
-
-  <div class="card">
-    <h2>Preparar rendición <span class="muted" id="prepMonthLabel"></span></h2>
-    <div class="stat-grid">
-      <div class="stat"><div class="n" id="statCount">0</div><div class="l">Gastos</div></div>
-      <div class="stat warn"><div class="n" id="statMissing">0</div><div class="l">Sin ticket</div></div>
-      <div class="stat"><div class="n" id="statTotal">$0</div><div class="l">Total</div></div>
-    </div>
-    <button class="primary" id="btnPreparar">Preparar texto para pegar en la planilla</button>
-    <div class="copybox" id="copyBox">
-      <textarea id="copyArea" readonly></textarea>
-      <div class="status" id="copyStatus"></div>
-      <div class="colbtns">
-        <button data-col="fecha">Copiar fechas</button>
-        <button data-col="concepto">Copiar conceptos</button>
-        <button data-col="monto">Copiar montos</button>
-        <button data-col="nota">Copiar notas</button>
+  <!-- ============ VISTA REPORTE ============ -->
+  <div id="viewReporte" style="display:none">
+    <div class="card">
+      <div class="yearnav">
+        <button id="prevYear">‹</button>
+        <div class="ylabel" id="yearLabel">—</div>
+        <button id="nextYear">›</button>
       </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="n" id="rTotal">$0</div><div class="l">Total año</div></div>
+        <div class="stat"><div class="n" id="rCant">0</div><div class="l">Gastos</div></div>
+        <div class="stat warn"><div class="n" id="rSinTicket">0</div><div class="l">Sin ticket</div></div>
+      </div>
+      <div id="reporteStatus" class="status"></div>
     </div>
-    <p class="note-small">Pegá empezando en la celda <strong>A14</strong> de la solapa del mes en tu planilla real (columnas Fecha · Concepto · Total · Nota). Si Excel se queja por las celdas combinadas, usá los botones de "copiar columna por columna".</p>
+
+    <div class="card">
+      <h2>Por mes</h2>
+      <div id="mesesContainer"><div class="empty">Cargando…</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Por concepto</h2>
+      <div id="conceptosContainer"><div class="empty">Cargando…</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Descargar para presentar</h2>
+      <p class="saved-note">Genera el archivo <strong>.xlsx</strong> con las 12 solapas, tal cual el formato que presentás. Adjuntalo al mail y listo.</p>
+      <button class="primary" id="btnDescargar">Descargar planilla (.xlsx)</button>
+      <a id="linkSheet" href="#" target="_blank" rel="noopener" style="display:block; text-align:center; margin-top:12px; font-size:13px; color:var(--rust-deep); font-weight:600;">Abrir la planilla en Google Sheets</a>
+      <div class="status" id="statusDescarga"></div>
+    </div>
   </div>
 
   <footer>
-    Los gastos quedan en una Google Sheet + Drive compartidos del equipo — visibles para quien tenga el link y el PIN.<br>
-    No hay recordatorio automático: abrí esta página cerca del día 8 y el contador de arriba te avisa.
+    Los gastos se guardan directo en tu planilla de Google Sheets — visible para quien tenga el link y el PIN.<br>
+    No hay recordatorio automático: abrí esta página cerca del día 8 y el contador te avisa.
   </footer>
 </div>
 
 <script>
-/* =================== CONFIGURÁ ESTO ANTES DE PUBLICAR =================== */
+/* =================== CONFIG =================== */
 const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyCBmdljOc5uIQltXWA-yWKanaiXjqKIrA64Bq638m-t0Ed3WOtEdl0KbNUlTYmSGZ1/exec";
-/* =========================================================================== */
+/* ============================================== */
 
 const CONCEPTOS = ['Almuerzo','Cena','Combustible','Estacionamiento','Hotel','Otros','Peaje'];
 const ICONS = {Almuerzo:'🍽️',Cena:'🌙',Combustible:'⛽',Estacionamiento:'🅿️',Hotel:'🏨',Otros:'🧾',Peaje:'🛣️'};
@@ -228,6 +279,7 @@ let ym = ymKey(currentDate);
 let entries = [];
 let editingId = null;
 let pendingPhoto = null;
+let currentYear = new Date().getFullYear();
 let nombre = localStorage.getItem('rg_nombre') || '';
 let pin = localStorage.getItem('rg_pin') || '';
 
@@ -235,15 +287,14 @@ function ymKey(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(
 function ymToDate(s){ const [y,m]=s.split('-').map(Number); return new Date(y,m-1,1); }
 function monthLabelOf(s){ const [y,m]=s.split('-'); return `${MONTHS[parseInt(m)-1]} ${y}`; }
 function fmtMoney(n){ return '$ ' + Number(n||0).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtMoneyShort(n){ return '$' + Math.round(Number(n)||0).toLocaleString('es-AR'); }
 function fmtShort(iso){ const [y,m,d]=iso.split('-'); return `${d}/${m}`; }
-function fmtDDMMYYYY(iso){ const [y,m,d]=iso.split('-'); return `${d}/${m}/${y}`; }
 function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function uid(){ return (crypto.randomUUID ? crypto.randomUUID() : 'id-'+Date.now()+'-'+Math.random().toString(16).slice(2)); }
 
-/* ---------- backend calls ---------- */
+/* ---------- backend ---------- */
 async function apiGet(params){
-  const url = BACKEND_URL + '?' + new URLSearchParams({...params, pin}).toString();
-  const res = await fetch(url);
+  const res = await fetch(BACKEND_URL + '?' + new URLSearchParams({...params, pin}).toString());
   const data = await res.json();
   if(!data.ok) throw new Error(data.error || 'Error desconocido');
   return data;
@@ -251,7 +302,7 @@ async function apiGet(params){
 async function apiPost(action, payload){
   const res = await fetch(BACKEND_URL, {
     method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'}, // evita preflight CORS con Apps Script
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body: JSON.stringify({action, pin, ...payload})
   });
   const data = await res.json();
@@ -259,7 +310,7 @@ async function apiPost(action, payload){
   return data;
 }
 
-/* ---------- gate (nombre + pin) ---------- */
+/* ---------- gate ---------- */
 const gate = document.getElementById('gate');
 const appEl = document.getElementById('app');
 function showGate(){
@@ -283,6 +334,19 @@ document.getElementById('gateBtn').addEventListener('click', () => {
 });
 document.getElementById('changeWho').addEventListener('click', showGate);
 
+/* ---------- nav ---------- */
+document.getElementById('navGastos').addEventListener('click', () => showView('gastos'));
+document.getElementById('navReporte').addEventListener('click', () => showView('reporte'));
+document.getElementById('btnIrReporte').addEventListener('click', () => { showView('reporte'); window.scrollTo({top:0,behavior:'smooth'}); });
+function showView(v){
+  const esG = v === 'gastos';
+  document.getElementById('navGastos').classList.toggle('active', esG);
+  document.getElementById('navReporte').classList.toggle('active', !esG);
+  document.getElementById('viewGastos').style.display = esG ? 'block':'none';
+  document.getElementById('viewReporte').style.display = esG ? 'none':'block';
+  if(!esG) cargarReporte();
+}
+
 /* ---------- countdown ---------- */
 function renderCountdown(){
   const now = new Date(); const day = now.getDate();
@@ -295,7 +359,7 @@ function renderCountdown(){
   else { el.textContent = `Faltan ${diffDays} días (8 de ${MONTHS[target.getMonth()]})`; el.className='countdown ok'; }
 }
 
-/* ---------- tabs ---------- */
+/* ---------- tabs foto/manual ---------- */
 document.getElementById('tabFoto').onclick = () => switchTab('foto');
 document.getElementById('tabManual').onclick = () => switchTab('manual');
 function switchTab(tab){
@@ -310,7 +374,7 @@ function switchTab(tab){
   }
 }
 
-/* ---------- photo capture ---------- */
+/* ---------- foto ---------- */
 const photoInput = document.getElementById('photoInput');
 photoInput.addEventListener('change', async (e) => {
   const file = e.target.files[0]; if(!file) return;
@@ -353,32 +417,6 @@ function resizeImage(file, maxDim=1400){
   });
 }
 
-document.getElementById('btnAnalizar').addEventListener('click', async () => {
-  if(!pendingPhoto) return;
-  const statusEl = document.getElementById('statusAnalizar');
-  const btn = document.getElementById('btnAnalizar');
-  btn.disabled = true; statusEl.textContent = 'Analizando ticket con IA…'; statusEl.className='status';
-  try{
-    const {resultado} = await apiPost('analizar', {imageBase64: pendingPhoto.base64, mediaType: pendingPhoto.mediaType});
-    const today = new Date().toISOString().slice(0,10);
-
-    editingId = null;
-    document.getElementById('btnCancelarEdit').style.display='none';
-    document.getElementById('gastoForm').dataset.forceShow='1';
-    document.getElementById('gastoForm').style.display='block';
-    document.getElementById('formTitle').textContent = 'Revisá y confirmá';
-    document.getElementById('fFecha').value = resultado.fecha && /^\d{4}-\d{2}-\d{2}$/.test(resultado.fecha) ? resultado.fecha : today;
-    document.getElementById('fConcepto').value = CONCEPTOS.includes(resultado.concepto) ? resultado.concepto : 'Otros';
-    document.getElementById('fMonto').value = typeof resultado.monto === 'number' ? resultado.monto : '';
-    document.getElementById('fNota').value = resultado.detalle || '';
-    document.getElementById('fFactura').checked = true;
-    statusEl.textContent = 'Listo — revisá los datos antes de guardar.'; statusEl.className='status ok';
-  }catch(err){
-    console.error(err);
-    statusEl.textContent = 'No se pudo analizar (' + err.message + '). Cargalo manual.'; statusEl.className='status error';
-  }finally{ btn.disabled = false; }
-});
-
 document.getElementById('btnSoloGuardarFoto').addEventListener('click', async () => {
   if(!pendingPhoto) return;
   const statusEl = document.getElementById('statusAnalizar');
@@ -397,7 +435,31 @@ document.getElementById('btnSoloGuardarFoto').addEventListener('click', async ()
   }finally{ btn.disabled = false; }
 });
 
-/* ---------- form submit ---------- */
+document.getElementById('btnAnalizar').addEventListener('click', async () => {
+  if(!pendingPhoto) return;
+  const statusEl = document.getElementById('statusAnalizar');
+  const btn = document.getElementById('btnAnalizar');
+  btn.disabled = true; statusEl.textContent = 'Analizando ticket con IA…'; statusEl.className='status';
+  try{
+    const {resultado} = await apiPost('analizar', {imageBase64: pendingPhoto.base64, mediaType: pendingPhoto.mediaType});
+    const today = new Date().toISOString().slice(0,10);
+    editingId = null;
+    document.getElementById('btnCancelarEdit').style.display='none';
+    document.getElementById('gastoForm').dataset.forceShow='1';
+    document.getElementById('gastoForm').style.display='block';
+    document.getElementById('formTitle').textContent = 'Revisá y confirmá';
+    document.getElementById('fFecha').value = resultado.fecha && /^\d{4}-\d{2}-\d{2}$/.test(resultado.fecha) ? resultado.fecha : today;
+    document.getElementById('fConcepto').value = CONCEPTOS.includes(resultado.concepto) ? resultado.concepto : 'Otros';
+    document.getElementById('fMonto').value = typeof resultado.monto === 'number' ? resultado.monto : '';
+    document.getElementById('fNota').value = resultado.detalle || '';
+    document.getElementById('fFactura').checked = true;
+    statusEl.textContent = 'Listo — revisá los datos antes de guardar.'; statusEl.className='status ok';
+  }catch(err){
+    statusEl.textContent = 'No se pudo analizar (' + err.message + '). Cargalo manual.'; statusEl.className='status error';
+  }finally{ btn.disabled = false; }
+});
+
+/* ---------- guardar ---------- */
 document.getElementById('gastoForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const fecha = document.getElementById('fFecha').value;
@@ -408,10 +470,10 @@ document.getElementById('gastoForm').addEventListener('submit', async (e) => {
   if(!fecha || isNaN(monto) || monto < 0){ alert('Completá fecha y monto.'); return; }
   if(!tieneFactura && !nota){ nota = 'Sin factura'; }
 
-  let fotoUrl = '';
   const btn = document.getElementById('btnGuardar');
   btn.disabled = true; btn.textContent = 'Guardando…';
   try{
+    let fotoUrl = '';
     if(pendingPhoto && !editingId){
       const up = await apiPost('subirFoto', {imageBase64: pendingPhoto.base64, mediaType: pendingPhoto.mediaType});
       fotoUrl = up.url;
@@ -422,14 +484,13 @@ document.getElementById('gastoForm').addEventListener('submit', async (e) => {
       ? {...original, fecha, concepto, monto, nota, tieneFactura}
       : {id: uid(), fecha, concepto, monto, nota, tieneFactura, nombre, fotoUrl};
 
-    // si estaba editando y la fecha nueva cae en otro mes, borro la fila vieja primero
     if(original && original.fecha.slice(0,7) !== targetYm){
       await apiPost('eliminar', {id: editingId, mes: original.fecha.slice(0,7)});
     }
     await apiPost('guardar', {entry});
 
     if(targetYm !== ym){ ym = targetYm; currentDate = ymToDate(ym); }
-    entries = await (await apiGet({action:'listar', mes: ym})).entries;
+    entries = (await apiGet({action:'listar', mes: ym})).entries;
     renderList();
     resetForm();
   }catch(err){
@@ -459,7 +520,7 @@ function resetForm(){
   switchTab('foto');
 }
 
-/* ---------- list ---------- */
+/* ---------- lista ---------- */
 function renderList(){
   document.getElementById('monthLabel').textContent = monthLabelOf(ym);
   document.getElementById('prepMonthLabel').textContent = '— ' + monthLabelOf(ym);
@@ -495,12 +556,9 @@ function renderList(){
   const total = entries.reduce((s,e)=>s+Number(e.monto||0),0);
   document.getElementById('listTotal').textContent = fmtMoney(total);
   document.getElementById('ticketTotal').textContent = fmtMoney(total);
-
-  const missing = entries.filter(e=>!e.tieneFactura).length;
   document.getElementById('statCount').textContent = entries.length;
-  document.getElementById('statMissing').textContent = missing;
-  document.getElementById('statTotal').textContent = fmtMoney(total).replace(' ','');
-  document.getElementById('copyBox').style.display = 'none';
+  document.getElementById('statMissing').textContent = entries.filter(e=>!e.tieneFactura).length;
+  document.getElementById('statTotal').textContent = fmtMoneyShort(total);
 }
 
 document.getElementById('listContainer').addEventListener('click', async (e) => {
@@ -541,54 +599,79 @@ document.getElementById('listContainer').addEventListener('click', async (e) => 
   }
 });
 
-/* ---------- month nav ---------- */
+/* ---------- nav mes ---------- */
 document.getElementById('prevMonth').addEventListener('click', () => changeMonth(-1));
 document.getElementById('nextMonth').addEventListener('click', () => changeMonth(1));
 async function changeMonth(delta){
   currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth()+delta, 1);
   ym = ymKey(currentDate);
+  document.getElementById('listContainer').innerHTML = '<div class="empty">Cargando…</div>';
   try{ entries = (await apiGet({action:'listar', mes: ym})).entries; renderList(); }
   catch(err){ alert('No se pudo cargar el mes: ' + err.message); }
 }
 
-/* ---------- preparar rendición ---------- */
-document.getElementById('btnPreparar').addEventListener('click', () => {
-  const sorted = entries.slice().sort((a,b)=>a.fecha.localeCompare(b.fecha));
-  if(sorted.length===0){ alert('No hay gastos cargados este mes.'); return; }
-  const lines = sorted.map(e => {
-    const monto = Number(e.monto).toFixed(2).replace('.', ',');
-    return `${fmtDDMMYYYY(e.fecha)}\t${e.concepto}\t\t${monto}\t\t${e.nota||''}`;
-  });
-  const text = lines.join('\n');
-  document.getElementById('copyArea').value = text;
-  document.getElementById('copyBox').style.display = 'block';
-  const statusEl = document.getElementById('copyStatus');
-  navigator.clipboard?.writeText(text).then(() => {
-    statusEl.textContent = 'Copiado al portapapeles ✓ — pegalo en A14.'; statusEl.className='status ok';
-  }).catch(() => {
-    statusEl.textContent = 'Seleccioná el texto de abajo y copialo (Ctrl+C / Cmd+C).'; statusEl.className='status';
-    document.getElementById('copyArea').select();
-  });
-});
-document.querySelectorAll('.colbtns button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const col = btn.dataset.col;
-    const sorted = entries.slice().sort((a,b)=>a.fecha.localeCompare(b.fecha));
-    let text;
-    if(col==='fecha') text = sorted.map(e=>fmtDDMMYYYY(e.fecha)).join('\n');
-    else if(col==='concepto') text = sorted.map(e=>e.concepto).join('\n');
-    else if(col==='monto') text = sorted.map(e=>Number(e.monto).toFixed(2).replace('.', ',')).join('\n');
-    else text = sorted.map(e=>e.nota||'').join('\n');
-    document.getElementById('copyArea').value = text;
-    document.getElementById('copyBox').style.display = 'block';
-    const statusEl = document.getElementById('copyStatus');
-    navigator.clipboard?.writeText(text).then(() => {
-      statusEl.textContent = 'Copiado ✓'; statusEl.className='status ok';
-    }).catch(() => {
-      statusEl.textContent = 'Seleccioná el texto y copialo (Ctrl+C / Cmd+C).'; statusEl.className='status';
-      document.getElementById('copyArea').select();
-    });
-  });
+/* ---------- reporte ---------- */
+document.getElementById('prevYear').addEventListener('click', () => { currentYear--; cargarReporte(); });
+document.getElementById('nextYear').addEventListener('click', () => { currentYear++; cargarReporte(); });
+
+async function cargarReporte(){
+  document.getElementById('yearLabel').textContent = currentYear;
+  document.getElementById('reporteStatus').textContent = 'Cargando…';
+  document.getElementById('reporteStatus').className = 'status';
+  try{
+    const {resumen} = await apiGet({action:'resumen', anio: currentYear});
+    renderReporte(resumen);
+    document.getElementById('reporteStatus').textContent = '';
+  }catch(err){
+    document.getElementById('reporteStatus').textContent = 'No se pudo cargar el reporte: ' + err.message;
+    document.getElementById('reporteStatus').className = 'status error';
+  }
+}
+
+function renderReporte(r){
+  document.getElementById('rTotal').textContent = fmtMoneyShort(r.totalAnual);
+  document.getElementById('rCant').textContent = r.cantidadAnual;
+  document.getElementById('rSinTicket').textContent = r.sinTicketAnual;
+
+  const maxMes = Math.max(1, ...r.meses.map(m => m.total));
+  document.getElementById('mesesContainer').innerHTML = r.meses.map(m => `
+    <div class="mes-row ${m.total===0?'zero':''}">
+      <div class="mes-name">${m.mes.toLowerCase()}<small>${m.cantidad} gasto${m.cantidad===1?'':'s'}${m.sinTicket?' · '+m.sinTicket+' s/ticket':''}</small></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(m.total/maxMes*100).toFixed(1)}%"></div></div>
+      <div class="mes-amount">${fmtMoneyShort(m.total)}</div>
+    </div>
+  `).join('');
+
+  const contC = document.getElementById('conceptosContainer');
+  if(!r.conceptos.length){
+    contC.innerHTML = '<div class="empty">Sin gastos en este año.</div>';
+  } else {
+    contC.innerHTML = r.conceptos.map(c => {
+      const pct = r.totalAnual ? (c.total/r.totalAnual*100).toFixed(0) : 0;
+      return `<div class="concepto-row">
+        <div>${ICONS[c.concepto]||'🧾'} ${escapeHtml(c.concepto)}</div>
+        <div><span class="cr-amount">${fmtMoneyShort(c.total)}</span><span class="cr-pct">${pct}%</span></div>
+      </div>`;
+    }).join('');
+  }
+}
+
+document.getElementById('btnDescargar').addEventListener('click', async () => {
+  const btn = document.getElementById('btnDescargar');
+  const statusEl = document.getElementById('statusDescarga');
+  btn.disabled = true; btn.textContent = 'Generando archivo…';
+  statusEl.textContent = 'Puede tardar unos segundos.'; statusEl.className = 'status';
+  try{
+    const {url} = await apiPost('exportar', {mes: ym});
+    window.open(url, '_blank');
+    statusEl.textContent = 'Listo — si no se abrió la descarga, revisá el bloqueador de ventanas emergentes.';
+    statusEl.className = 'status ok';
+  }catch(err){
+    statusEl.textContent = 'No se pudo generar: ' + err.message + '. Podés descargarla desde Google Sheets con el link de abajo.';
+    statusEl.className = 'status error';
+  }finally{
+    btn.disabled = false; btn.textContent = 'Descargar planilla (.xlsx)';
+  }
 });
 
 /* ---------- init ---------- */
@@ -596,13 +679,18 @@ async function init(){
   renderCountdown();
   setInterval(renderCountdown, 60000);
   document.getElementById('fFecha').value = new Date().toISOString().slice(0,10);
+  document.getElementById('listContainer').innerHTML = '<div class="empty">Cargando…</div>';
   try{
     entries = (await apiGet({action:'listar', mes: ym})).entries;
   }catch(err){
-    alert('No se pudo conectar con la planilla: ' + err.message + '\n\n¿Configuraste BACKEND_URL en el archivo?');
+    alert('No se pudo conectar con la planilla: ' + err.message);
     entries = [];
   }
   renderList();
+  try{
+    const cfg = await apiGet({action:'config'});
+    if(cfg.sheetUrl) document.getElementById('linkSheet').href = cfg.sheetUrl;
+  }catch(err){ /* si falla, el link queda en # */ }
 }
 
 if(nombre){ enterApp(); } else { showGate(); }
