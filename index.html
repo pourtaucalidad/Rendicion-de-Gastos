@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Rendición de gastos — Pourtau Calidad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EDEAE0; --paper-deep:#E2DCC8; --card:#FBF9F2; --ink:#1D3B36;
+    --ink-70:rgba(29,59,54,.72); --ink-45:rgba(29,59,54,.45); --ink-20:rgba(29,59,54,.16); --ink-10:rgba(29,59,54,.08);
+    --rust:#A85C32; --rust-deep:#8C4A27; --sage:#5F8360; --sage-bg:#E3EBDF; --amber:#C08E2E; --amber-bg:#F3E7C9;
+    --white:#FFFDF8; --font-display:'Fraunces', Georgia, serif; --font-body:'Inter', system-ui, sans-serif;
+    --font-mono:'IBM Plex Mono', 'Courier New', monospace; --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:radial-gradient(1200px 600px at 10% -10%, var(--paper-deep), transparent 60%), var(--paper);
+    color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; padding:0 0 60px; min-height:100vh;}
+  .wrap{max-width:560px; margin:0 auto; padding:22px 16px 0;}
+  header{padding:6px 4px 18px;}
+  .eyebrow{font-family:var(--font-mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-45); margin-bottom:6px;}
+  h1{font-family:var(--font-display); font-weight:600; font-size:26px; margin:0 0 2px; letter-spacing:-.01em;}
+  .subline{color:var(--ink-70); font-size:13.5px; margin:0;}
+  .who{font-size:12.5px; color:var(--ink-45); margin-top:4px;}
+  .who button{background:none; border:none; color:var(--rust-deep); font-weight:600; cursor:pointer; padding:0; font-family:var(--font-body); font-size:12.5px; text-decoration:underline;}
+
+  .ticket{position:relative; background:var(--white); border-radius:var(--radius); padding:18px 20px 20px; margin:16px 0 18px;
+    box-shadow:0 1px 0 var(--ink-10), 0 10px 24px -18px rgba(29,59,54,.35); border:1px solid var(--ink-10);}
+  .ticket::before,.ticket::after{content:""; position:absolute; width:18px; height:18px; border-radius:50%; background:var(--paper); top:calc(100% - 9px);}
+  .ticket::before{left:-9px;} .ticket::after{right:-9px;}
+  .ticket-row{display:flex; justify-content:space-between; align-items:baseline; gap:10px;}
+  .ticket-label{font-size:12px; color:var(--ink-45); text-transform:uppercase; letter-spacing:.08em; font-family:var(--font-mono);}
+  .ticket-total{font-family:var(--font-mono); font-weight:600; font-size:26px; letter-spacing:-.01em;}
+  .countdown{font-size:14px; font-weight:600; margin-top:2px;}
+  .countdown.warn{color:var(--rust-deep);} .countdown.ok{color:var(--sage);}
+
+  .card{background:var(--card); border-radius:var(--radius); border:1px solid var(--ink-10); padding:18px; margin-bottom:16px;}
+  .card h2{font-family:var(--font-display); font-size:18px; font-weight:600; margin:0 0 12px;}
+  .card h2 .muted{color:var(--ink-45); font-weight:500; font-size:14px;}
+
+  .tabs{display:flex; gap:6px; margin-bottom:14px; background:var(--ink-10); padding:4px; border-radius:10px;}
+  .tab{flex:1; text-align:center; padding:8px 10px; border-radius:8px; font-size:13.5px; font-weight:600; cursor:pointer;
+    color:var(--ink-70); user-select:none; border:none; background:transparent; font-family:var(--font-body);}
+  .tab.active{background:var(--white); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.08);}
+
+  .field{margin-bottom:12px;}
+  .field label{display:block; font-size:12.5px; font-weight:600; color:var(--ink-70); margin-bottom:5px;}
+  input[type=text],input[type=number],input[type=date],select,textarea{width:100%; padding:10px 11px; border-radius:9px;
+    border:1px solid var(--ink-20); background:var(--white); font-family:var(--font-body); font-size:14.5px; color:var(--ink);}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--sage); outline-offset:1px;}
+  .row2{display:flex; gap:10px;} .row2>div{flex:1;}
+
+  .photo-drop{border:1.5px dashed var(--ink-20); border-radius:11px; padding:18px; text-align:center; background:var(--paper);
+    cursor:pointer; margin-bottom:12px;}
+  .photo-drop img{max-width:100%; max-height:220px; border-radius:8px; margin-bottom:8px; display:block; margin:0 auto 8px;}
+  .photo-drop .hint{font-size:13px; color:var(--ink-45);} .photo-drop .hint strong{color:var(--ink-70);}
+
+  .checkline{display:flex; align-items:center; gap:8px; font-size:14px; margin:10px 0 14px;}
+  .checkline input{width:16px; height:16px;}
+
+  button.primary{width:100%; padding:12px; border-radius:10px; border:none; background:var(--ink); color:var(--white);
+    font-weight:600; font-size:14.5px; cursor:pointer; font-family:var(--font-body);}
+  button.primary:disabled{opacity:.5; cursor:default;}
+  button.secondary{width:100%; padding:11px; border-radius:10px; border:1.5px solid var(--ink-20); background:transparent;
+    color:var(--ink); font-weight:600; font-size:14px; cursor:pointer; font-family:var(--font-body); margin-top:8px;}
+  button.ghost{background:transparent; border:none; color:var(--rust-deep); font-weight:600; font-size:13px; cursor:pointer;
+    font-family:var(--font-body); padding:6px 0;}
+  .status{font-size:13px; color:var(--ink-45); margin-top:8px; min-height:16px;}
+  .status.error{color:var(--rust-deep);} .status.ok{color:var(--sage);}
+
+  .monthnav{display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;}
+  .monthnav button{background:none; border:1px solid var(--ink-20); border-radius:8px; width:32px; height:32px; cursor:pointer; font-size:15px; color:var(--ink);}
+  .monthnav .mlabel{font-family:var(--font-display); font-weight:600; font-size:16px; text-transform:capitalize;}
+
+  .empty{text-align:center; padding:26px 10px; color:var(--ink-45); font-size:14px;}
+  .list-row{display:grid; grid-template-columns:64px 1fr auto; align-items:center; gap:10px; padding:11px 4px; border-bottom:1px solid var(--ink-10);}
+  .list-row:last-child{border-bottom:none;}
+  .list-row.warn{background:linear-gradient(90deg, var(--amber-bg), transparent 40%); border-radius:8px;}
+  .lr-date{font-family:var(--font-mono); font-size:12px; color:var(--ink-45);}
+  .lr-main .lr-concept{font-weight:600; font-size:14px;}
+  .lr-main .lr-note{font-size:12px; color:var(--rust-deep); margin-top:1px;}
+  .lr-main .lr-who{font-size:11px; color:var(--ink-45); margin-top:1px;}
+  .lr-right{text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:3px;}
+  .lr-amount{font-family:var(--font-mono); font-weight:600; font-size:14.5px;}
+  .lr-actions{display:flex; gap:6px; align-items:center;}
+  .lr-actions button{background:none; border:none; cursor:pointer; font-size:13px; color:var(--ink-45); padding:2px;}
+  .lr-actions a{font-size:11px; color:var(--sage); text-decoration:none;}
+  .factura-toggle{display:flex; align-items:center; gap:4px; font-size:11px; color:var(--sage); cursor:pointer; user-select:none;}
+  .factura-toggle.off{color:var(--amber);} .factura-toggle input{width:13px; height:13px;}
+
+  .totalbar{display:flex; justify-content:space-between; align-items:baseline; padding:10px 4px 0; margin-top:4px; border-top:1.5px solid var(--ink);}
+  .totalbar .tb-label{font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-45);}
+  .totalbar .tb-amount{font-family:var(--font-mono); font-weight:700; font-size:18px;}
+
+  .stat-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:14px;}
+  .stat{background:var(--white); border-radius:10px; padding:10px 8px; text-align:center; border:1px solid var(--ink-10);}
+  .stat .n{font-family:var(--font-mono); font-weight:700; font-size:19px;}
+  .stat .l{font-size:10.5px; color:var(--ink-45); text-transform:uppercase; letter-spacing:.05em; margin-top:2px;}
+  .stat.warn .n{color:var(--amber);}
+
+  .copybox{display:none; margin-top:12px;}
+  .copybox textarea{width:100%; height:110px; font-family:var(--font-mono); font-size:12px; resize:vertical;}
+  .colbtns{display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;}
+  .colbtns button{flex:1; min-width:70px; padding:8px 6px; border-radius:8px; border:1px solid var(--ink-20); background:var(--white);
+    font-size:12px; font-weight:600; cursor:pointer; color:var(--ink-70);}
+  .note-small{font-size:12px; color:var(--ink-45); margin-top:10px; line-height:1.5;}
+
+  .gate{position:fixed; inset:0; background:var(--paper); display:flex; align-items:center; justify-content:center; padding:20px; z-index:50;}
+  .gate .card{max-width:340px; width:100%;}
+
+  footer{text-align:center; padding:14px 10px 0; font-size:11.5px; color:var(--ink-45); line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="card">
+    <h2>Antes de arrancar</h2>
+    <div class="field"><label>Tu nombre</label><input type="text" id="gateNombre" placeholder="Ej: Malena Medina"></div>
+    <div class="field" id="gatePinField"><label>PIN del equipo (te lo pasa quien armó la app)</label><input type="text" id="gatePin" placeholder="••••"></div>
+    <button class="primary" id="gateBtn">Entrar</button>
+    <div class="status" id="gateStatus"></div>
+  </div>
+</div>
+
+<div class="wrap" id="app" style="display:none">
+  <header>
+    <div class="eyebrow">Grupo Pourtau · Calidad</div>
+    <h1>Rendición de gastos</h1>
+    <p class="subline">Cargá cada gasto en el momento, controlá contra el sobre al final.</p>
+    <p class="who">Entrando como <strong id="whoName"></strong> · <button id="changeWho">cambiar</button></p>
+  </header>
+
+  <div class="ticket">
+    <div class="ticket-row">
+      <div><div class="ticket-label">Próxima rendición</div><div class="countdown" id="countdownText">—</div></div>
+      <div style="text-align:right"><div class="ticket-label">Total del mes</div><div class="ticket-total" id="ticketTotal">$ 0</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 id="formTitle">Cargar gasto</h2>
+    <div class="tabs">
+      <button class="tab active" data-tab="foto" id="tabFoto">📷 Foto del ticket</button>
+      <button class="tab" data-tab="manual" id="tabManual">✎ Manual</button>
+    </div>
+
+    <div id="panelFoto">
+      <label class="photo-drop" for="photoInput">
+        <img id="photoPreview" style="display:none">
+        <div class="hint" id="photoHint"><strong>Sacar / subir foto</strong><br>del ticket o factura</div>
+      </label>
+      <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none">
+      <button class="primary" id="btnAnalizar" disabled>Analizar con IA</button>
+      <button class="secondary" id="btnSoloGuardarFoto" disabled>Guardar solo la foto (cargo los datos después)</button>
+      <div class="status" id="statusAnalizar"></div>
+    </div>
+
+    <form id="gastoForm" style="display:none">
+      <div class="row2">
+        <div class="field"><label>Fecha</label><input type="date" id="fFecha" required></div>
+        <div class="field"><label>Concepto</label>
+          <select id="fConcepto">
+            <option>Almuerzo</option><option>Cena</option><option>Combustible</option>
+            <option>Estacionamiento</option><option>Hotel</option><option>Otros</option><option>Peaje</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Monto ($)</label><input type="number" id="fMonto" step="0.01" min="0" required placeholder="0,00"></div>
+      <div class="field"><label>Nota (opcional)</label><input type="text" id="fNota" placeholder="Ej: Almuerzo auditoría Sucursal Tandil"></div>
+      <div class="checkline"><input type="checkbox" id="fFactura" checked>
+        <label for="fFactura" style="margin:0; font-weight:500; color:var(--ink-70)">Tengo el comprobante físico (va al sobre)</label>
+      </div>
+      <button type="submit" class="primary" id="btnGuardar">Guardar gasto</button>
+      <button type="button" class="ghost" id="btnCancelarEdit" style="display:none">Cancelar edición</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="monthnav">
+      <button id="prevMonth">‹</button>
+      <div class="mlabel" id="monthLabel">—</div>
+      <button id="nextMonth">›</button>
+    </div>
+    <div id="listContainer"></div>
+    <div class="totalbar"><div class="tb-label">Total</div><div class="tb-amount" id="listTotal">$ 0</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Preparar rendición <span class="muted" id="prepMonthLabel"></span></h2>
+    <div class="stat-grid">
+      <div class="stat"><div class="n" id="statCount">0</div><div class="l">Gastos</div></div>
+      <div class="stat warn"><div class="n" id="statMissing">0</div><div class="l">Sin ticket</div></div>
+      <div class="stat"><div class="n" id="statTotal">$0</div><div class="l">Total</div></div>
+    </div>
+    <button class="primary" id="btnPreparar">Preparar texto para pegar en la planilla</button>
+    <div class="copybox" id="copyBox">
+      <textarea id="copyArea" readonly></textarea>
+      <div class="status" id="copyStatus"></div>
+      <div class="colbtns">
+        <button data-col="fecha">Copiar fechas</button>
+        <button data-col="concepto">Copiar conceptos</button>
+        <button data-col="monto">Copiar montos</button>
+        <button data-col="nota">Copiar notas</button>
+      </div>
+    </div>
+    <p class="note-small">Pegá empezando en la celda <strong>A14</strong> de la solapa del mes en tu planilla real (columnas Fecha · Concepto · Total · Nota). Si Excel se queja por las celdas combinadas, usá los botones de "copiar columna por columna".</p>
+  </div>
+
+  <footer>
+    Los gastos quedan en una Google Sheet + Drive compartidos del equipo — visibles para quien tenga el link y el PIN.<br>
+    No hay recordatorio automático: abrí esta página cerca del día 8 y el contador de arriba te avisa.
+  </footer>
+</div>
+
+<script>
+/* =================== CONFIGURÁ ESTO ANTES DE PUBLICAR =================== */
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyCBmdljOc5uIQltXWA-yWKanaiXjqKIrA64Bq638m-t0Ed3WOtEdl0KbNUlTYmSGZ1/exec";
+/* =========================================================================== */
+
+const CONCEPTOS = ['Almuerzo','Cena','Combustible','Estacionamiento','Hotel','Otros','Peaje'];
+const ICONS = {Almuerzo:'🍽️',Cena:'🌙',Combustible:'⛽',Estacionamiento:'🅿️',Hotel:'🏨',Otros:'🧾',Peaje:'🛣️'};
+const MONTHS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+let currentDate = new Date();
+let ym = ymKey(currentDate);
+let entries = [];
+let editingId = null;
+let pendingPhoto = null;
+let nombre = localStorage.getItem('rg_nombre') || '';
+let pin = localStorage.getItem('rg_pin') || '';
+
+function ymKey(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+function ymToDate(s){ const [y,m]=s.split('-').map(Number); return new Date(y,m-1,1); }
+function monthLabelOf(s){ const [y,m]=s.split('-'); return `${MONTHS[parseInt(m)-1]} ${y}`; }
+function fmtMoney(n){ return '$ ' + Number(n||0).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtShort(iso){ const [y,m,d]=iso.split('-'); return `${d}/${m}`; }
+function fmtDDMMYYYY(iso){ const [y,m,d]=iso.split('-'); return `${d}/${m}/${y}`; }
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function uid(){ return (crypto.randomUUID ? crypto.randomUUID() : 'id-'+Date.now()+'-'+Math.random().toString(16).slice(2)); }
+
+/* ---------- backend calls ---------- */
+async function apiGet(params){
+  const url = BACKEND_URL + '?' + new URLSearchParams({...params, pin}).toString();
+  const res = await fetch(url);
+  const data = await res.json();
+  if(!data.ok) throw new Error(data.error || 'Error desconocido');
+  return data;
+}
+async function apiPost(action, payload){
+  const res = await fetch(BACKEND_URL, {
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'}, // evita preflight CORS con Apps Script
+    body: JSON.stringify({action, pin, ...payload})
+  });
+  const data = await res.json();
+  if(!data.ok) throw new Error(data.error || 'Error desconocido');
+  return data;
+}
+
+/* ---------- gate (nombre + pin) ---------- */
+const gate = document.getElementById('gate');
+const appEl = document.getElementById('app');
+function showGate(){
+  document.getElementById('gateNombre').value = nombre;
+  document.getElementById('gatePin').value = pin;
+  gate.style.display='flex'; appEl.style.display='none';
+}
+function enterApp(){
+  gate.style.display='none'; appEl.style.display='block';
+  document.getElementById('whoName').textContent = nombre;
+  init();
+}
+document.getElementById('gateBtn').addEventListener('click', () => {
+  const n = document.getElementById('gateNombre').value.trim();
+  const p = document.getElementById('gatePin').value.trim();
+  if(!n){ document.getElementById('gateStatus').textContent = 'Ingresá tu nombre.'; return; }
+  nombre = n; pin = p;
+  localStorage.setItem('rg_nombre', nombre);
+  localStorage.setItem('rg_pin', pin);
+  enterApp();
+});
+document.getElementById('changeWho').addEventListener('click', showGate);
+
+/* ---------- countdown ---------- */
+function renderCountdown(){
+  const now = new Date(); const day = now.getDate();
+  let target = new Date(now.getFullYear(), now.getMonth(), 8);
+  if(day > 8) target = new Date(now.getFullYear(), now.getMonth()+1, 8);
+  const diffDays = Math.round((target - new Date(now.getFullYear(),now.getMonth(),day)) / 86400000);
+  const el = document.getElementById('countdownText');
+  if(day === 8){ el.textContent = 'Hoy es el día de la rendición'; el.className='countdown warn'; }
+  else if(diffDays <= 3){ el.textContent = `Faltan ${diffDays} día${diffDays===1?'':'s'} (8 de ${MONTHS[target.getMonth()]})`; el.className='countdown warn'; }
+  else { el.textContent = `Faltan ${diffDays} días (8 de ${MONTHS[target.getMonth()]})`; el.className='countdown ok'; }
+}
+
+/* ---------- tabs ---------- */
+document.getElementById('tabFoto').onclick = () => switchTab('foto');
+document.getElementById('tabManual').onclick = () => switchTab('manual');
+function switchTab(tab){
+  document.getElementById('tabFoto').classList.toggle('active', tab==='foto');
+  document.getElementById('tabManual').classList.toggle('active', tab==='manual');
+  document.getElementById('panelFoto').style.display = tab==='foto' ? 'block':'none';
+  document.getElementById('gastoForm').style.display = tab==='manual' ? 'block' : (document.getElementById('gastoForm').dataset.forceShow==='1'?'block':'none');
+  if(tab==='manual' && !editingId){
+    document.getElementById('gastoForm').reset();
+    document.getElementById('fFecha').value = new Date().toISOString().slice(0,10);
+    document.getElementById('fFactura').checked = true;
+  }
+}
+
+/* ---------- photo capture ---------- */
+const photoInput = document.getElementById('photoInput');
+photoInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0]; if(!file) return;
+  const statusEl = document.getElementById('statusAnalizar');
+  statusEl.textContent = 'Cargando imagen…'; statusEl.className='status';
+  try{
+    const {dataUrl, base64, mediaType} = await resizeImage(file);
+    document.getElementById('photoPreview').src = dataUrl;
+    document.getElementById('photoPreview').style.display = 'block';
+    document.getElementById('photoHint').innerHTML = '<strong>Foto lista</strong><br>tocá para cambiarla';
+    pendingPhoto = {base64, mediaType};
+    document.getElementById('btnAnalizar').disabled = false;
+    document.getElementById('btnSoloGuardarFoto').disabled = false;
+    statusEl.textContent = '';
+  }catch(err){
+    statusEl.textContent = 'No se pudo leer la imagen. Probá con otra foto.'; statusEl.className='status error';
+  }
+});
+
+function resizeImage(file, maxDim=1400){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let {width,height} = img;
+        if(width>height && width>maxDim){ height=height*maxDim/width; width=maxDim; }
+        else if(height>maxDim){ width=width*maxDim/height; height=maxDim; }
+        const canvas = document.createElement('canvas');
+        canvas.width=Math.round(width); canvas.height=Math.round(height);
+        canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+        const dataUrl = canvas.toDataURL('image/jpeg',0.85);
+        resolve({dataUrl, base64:dataUrl.split(',')[1], mediaType:'image/jpeg'});
+      };
+      img.onerror = () => reject(new Error('img load failed'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('read failed'));
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('btnAnalizar').addEventListener('click', async () => {
+  if(!pendingPhoto) return;
+  const statusEl = document.getElementById('statusAnalizar');
+  const btn = document.getElementById('btnAnalizar');
+  btn.disabled = true; statusEl.textContent = 'Analizando ticket con IA…'; statusEl.className='status';
+  try{
+    const {resultado} = await apiPost('analizar', {imageBase64: pendingPhoto.base64, mediaType: pendingPhoto.mediaType});
+    const today = new Date().toISOString().slice(0,10);
+
+    editingId = null;
+    document.getElementById('btnCancelarEdit').style.display='none';
+    document.getElementById('gastoForm').dataset.forceShow='1';
+    document.getElementById('gastoForm').style.display='block';
+    document.getElementById('formTitle').textContent = 'Revisá y confirmá';
+    document.getElementById('fFecha').value = resultado.fecha && /^\d{4}-\d{2}-\d{2}$/.test(resultado.fecha) ? resultado.fecha : today;
+    document.getElementById('fConcepto').value = CONCEPTOS.includes(resultado.concepto) ? resultado.concepto : 'Otros';
+    document.getElementById('fMonto').value = typeof resultado.monto === 'number' ? resultado.monto : '';
+    document.getElementById('fNota').value = resultado.detalle || '';
+    document.getElementById('fFactura').checked = true;
+    statusEl.textContent = 'Listo — revisá los datos antes de guardar.'; statusEl.className='status ok';
+  }catch(err){
+    console.error(err);
+    statusEl.textContent = 'No se pudo analizar (' + err.message + '). Cargalo manual.'; statusEl.className='status error';
+  }finally{ btn.disabled = false; }
+});
+
+document.getElementById('btnSoloGuardarFoto').addEventListener('click', async () => {
+  if(!pendingPhoto) return;
+  const statusEl = document.getElementById('statusAnalizar');
+  const btn = document.getElementById('btnSoloGuardarFoto');
+  btn.disabled = true; statusEl.textContent = 'Guardando foto…'; statusEl.className = 'status';
+  try{
+    const {url} = await apiPost('subirFoto', {imageBase64: pendingPhoto.base64, mediaType: pendingPhoto.mediaType});
+    const today = new Date().toISOString().slice(0,10);
+    const entry = {id: uid(), fecha: today, concepto:'Otros', monto:0, nota:'Foto sin revisar — completar datos', tieneFactura:true, nombre, fotoUrl:url};
+    await apiPost('guardar', {entry});
+    if(today.slice(0,7) === ym){ entries.push(entry); renderList(); }
+    statusEl.textContent = 'Foto guardada. Buscala en la lista para completar los datos.'; statusEl.className='status ok';
+    resetForm();
+  }catch(err){
+    statusEl.textContent = 'No se pudo guardar (' + err.message + ').'; statusEl.className='status error';
+  }finally{ btn.disabled = false; }
+});
+
+/* ---------- form submit ---------- */
+document.getElementById('gastoForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fecha = document.getElementById('fFecha').value;
+  const concepto = document.getElementById('fConcepto').value;
+  const monto = parseFloat(document.getElementById('fMonto').value);
+  let nota = document.getElementById('fNota').value.trim();
+  const tieneFactura = document.getElementById('fFactura').checked;
+  if(!fecha || isNaN(monto) || monto < 0){ alert('Completá fecha y monto.'); return; }
+  if(!tieneFactura && !nota){ nota = 'Sin factura'; }
+
+  let fotoUrl = '';
+  const btn = document.getElementById('btnGuardar');
+  btn.disabled = true; btn.textContent = 'Guardando…';
+  try{
+    if(pendingPhoto && !editingId){
+      const up = await apiPost('subirFoto', {imageBase64: pendingPhoto.base64, mediaType: pendingPhoto.mediaType});
+      fotoUrl = up.url;
+    }
+    const targetYm = fecha.slice(0,7);
+    const original = editingId ? entries.find(x=>x.id===editingId) : null;
+    const entry = original
+      ? {...original, fecha, concepto, monto, nota, tieneFactura}
+      : {id: uid(), fecha, concepto, monto, nota, tieneFactura, nombre, fotoUrl};
+
+    // si estaba editando y la fecha nueva cae en otro mes, borro la fila vieja primero
+    if(original && original.fecha.slice(0,7) !== targetYm){
+      await apiPost('eliminar', {id: editingId, mes: original.fecha.slice(0,7)});
+    }
+    await apiPost('guardar', {entry});
+
+    if(targetYm !== ym){ ym = targetYm; currentDate = ymToDate(ym); }
+    entries = await (await apiGet({action:'listar', mes: ym})).entries;
+    renderList();
+    resetForm();
+  }catch(err){
+    alert('No se pudo guardar: ' + err.message);
+  }finally{
+    btn.disabled = false; btn.textContent = 'Guardar gasto';
+  }
+});
+
+document.getElementById('btnCancelarEdit').addEventListener('click', resetForm);
+
+function resetForm(){
+  editingId = null;
+  document.getElementById('gastoForm').reset();
+  document.getElementById('gastoForm').dataset.forceShow = '0';
+  document.getElementById('fFecha').value = new Date().toISOString().slice(0,10);
+  document.getElementById('fFactura').checked = true;
+  document.getElementById('formTitle').textContent = 'Cargar gasto';
+  document.getElementById('btnCancelarEdit').style.display = 'none';
+  document.getElementById('statusAnalizar').textContent = '';
+  pendingPhoto = null;
+  document.getElementById('btnAnalizar').disabled = true;
+  document.getElementById('btnSoloGuardarFoto').disabled = true;
+  document.getElementById('photoPreview').style.display = 'none';
+  document.getElementById('photoHint').innerHTML = '<strong>Sacar / subir foto</strong><br>del ticket o factura';
+  photoInput.value = '';
+  switchTab('foto');
+}
+
+/* ---------- list ---------- */
+function renderList(){
+  document.getElementById('monthLabel').textContent = monthLabelOf(ym);
+  document.getElementById('prepMonthLabel').textContent = '— ' + monthLabelOf(ym);
+  const container = document.getElementById('listContainer');
+  const sorted = entries.slice().sort((a,b) => a.fecha.localeCompare(b.fecha));
+
+  if(sorted.length === 0){
+    container.innerHTML = '<div class="empty">Todavía no hay gastos cargados este mes.</div>';
+  } else {
+    container.innerHTML = sorted.map(e => `
+      <div class="list-row ${!e.tieneFactura ? 'warn':''}" data-id="${e.id}">
+        <div class="lr-date">${fmtShort(e.fecha)}</div>
+        <div class="lr-main">
+          <div class="lr-concept">${ICONS[e.concepto]||'🧾'} ${escapeHtml(e.concepto)}</div>
+          ${e.nota ? `<div class="lr-note">${escapeHtml(e.nota)}</div>` : ''}
+          ${e.nombre ? `<div class="lr-who">${escapeHtml(e.nombre)}</div>` : ''}
+        </div>
+        <div class="lr-right">
+          <div class="lr-amount">${fmtMoney(e.monto)}</div>
+          <div class="lr-actions">
+            ${e.fotoUrl ? `<a href="${e.fotoUrl}" target="_blank" rel="noopener">foto</a>` : ''}
+            <label class="factura-toggle ${e.tieneFactura?'':'off'}">
+              <input type="checkbox" data-factura="${e.id}" ${e.tieneFactura?'checked':''}> ticket
+            </label>
+            <button data-edit="${e.id}" title="Editar">✎</button>
+            <button data-del="${e.id}" title="Borrar">🗑</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const total = entries.reduce((s,e)=>s+Number(e.monto||0),0);
+  document.getElementById('listTotal').textContent = fmtMoney(total);
+  document.getElementById('ticketTotal').textContent = fmtMoney(total);
+
+  const missing = entries.filter(e=>!e.tieneFactura).length;
+  document.getElementById('statCount').textContent = entries.length;
+  document.getElementById('statMissing').textContent = missing;
+  document.getElementById('statTotal').textContent = fmtMoney(total).replace(' ','');
+  document.getElementById('copyBox').style.display = 'none';
+}
+
+document.getElementById('listContainer').addEventListener('click', async (e) => {
+  const editId = e.target.closest('[data-edit]')?.dataset.edit;
+  const delId = e.target.closest('[data-del]')?.dataset.del;
+  const facturaId = e.target.closest('[data-factura]')?.dataset.factura;
+
+  if(editId){
+    const entry = entries.find(x=>x.id===editId); if(!entry) return;
+    editingId = editId;
+    document.getElementById('gastoForm').dataset.forceShow='1';
+    switchTab('manual');
+    document.getElementById('gastoForm').style.display='block';
+    document.getElementById('formTitle').textContent='Editar gasto';
+    document.getElementById('fFecha').value = entry.fecha;
+    document.getElementById('fConcepto').value = entry.concepto;
+    document.getElementById('fMonto').value = entry.monto;
+    document.getElementById('fNota').value = entry.nota || '';
+    document.getElementById('fFactura').checked = entry.tieneFactura;
+    document.getElementById('btnCancelarEdit').style.display='block';
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  if(delId){
+    if(!confirm('¿Borrar este gasto?')) return;
+    try{
+      await apiPost('eliminar', {id: delId, mes: ym});
+      entries = entries.filter(x=>x.id!==delId);
+      renderList();
+    }catch(err){ alert('No se pudo borrar: ' + err.message); }
+  }
+
+  if(facturaId){
+    const entry = entries.find(x=>x.id===facturaId); if(!entry) return;
+    entry.tieneFactura = !entry.tieneFactura;
+    try{ await apiPost('guardar', {entry}); renderList(); }
+    catch(err){ entry.tieneFactura = !entry.tieneFactura; alert('No se pudo actualizar: ' + err.message); }
+  }
+});
+
+/* ---------- month nav ---------- */
+document.getElementById('prevMonth').addEventListener('click', () => changeMonth(-1));
+document.getElementById('nextMonth').addEventListener('click', () => changeMonth(1));
+async function changeMonth(delta){
+  currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth()+delta, 1);
+  ym = ymKey(currentDate);
+  try{ entries = (await apiGet({action:'listar', mes: ym})).entries; renderList(); }
+  catch(err){ alert('No se pudo cargar el mes: ' + err.message); }
+}
+
+/* ---------- preparar rendición ---------- */
+document.getElementById('btnPreparar').addEventListener('click', () => {
+  const sorted = entries.slice().sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  if(sorted.length===0){ alert('No hay gastos cargados este mes.'); return; }
+  const lines = sorted.map(e => {
+    const monto = Number(e.monto).toFixed(2).replace('.', ',');
+    return `${fmtDDMMYYYY(e.fecha)}\t${e.concepto}\t\t${monto}\t\t${e.nota||''}`;
+  });
+  const text = lines.join('\n');
+  document.getElementById('copyArea').value = text;
+  document.getElementById('copyBox').style.display = 'block';
+  const statusEl = document.getElementById('copyStatus');
+  navigator.clipboard?.writeText(text).then(() => {
+    statusEl.textContent = 'Copiado al portapapeles ✓ — pegalo en A14.'; statusEl.className='status ok';
+  }).catch(() => {
+    statusEl.textContent = 'Seleccioná el texto de abajo y copialo (Ctrl+C / Cmd+C).'; statusEl.className='status';
+    document.getElementById('copyArea').select();
+  });
+});
+document.querySelectorAll('.colbtns button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const col = btn.dataset.col;
+    const sorted = entries.slice().sort((a,b)=>a.fecha.localeCompare(b.fecha));
+    let text;
+    if(col==='fecha') text = sorted.map(e=>fmtDDMMYYYY(e.fecha)).join('\n');
+    else if(col==='concepto') text = sorted.map(e=>e.concepto).join('\n');
+    else if(col==='monto') text = sorted.map(e=>Number(e.monto).toFixed(2).replace('.', ',')).join('\n');
+    else text = sorted.map(e=>e.nota||'').join('\n');
+    document.getElementById('copyArea').value = text;
+    document.getElementById('copyBox').style.display = 'block';
+    const statusEl = document.getElementById('copyStatus');
+    navigator.clipboard?.writeText(text).then(() => {
+      statusEl.textContent = 'Copiado ✓'; statusEl.className='status ok';
+    }).catch(() => {
+      statusEl.textContent = 'Seleccioná el texto y copialo (Ctrl+C / Cmd+C).'; statusEl.className='status';
+      document.getElementById('copyArea').select();
+    });
+  });
+});
+
+/* ---------- init ---------- */
+async function init(){
+  renderCountdown();
+  setInterval(renderCountdown, 60000);
+  document.getElementById('fFecha').value = new Date().toISOString().slice(0,10);
+  try{
+    entries = (await apiGet({action:'listar', mes: ym})).entries;
+  }catch(err){
+    alert('No se pudo conectar con la planilla: ' + err.message + '\n\n¿Configuraste BACKEND_URL en el archivo?');
+    entries = [];
+  }
+  renderList();
+}
+
+if(nombre){ enterApp(); } else { showGate(); }
+</script>
+</body>
+</html>
