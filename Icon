@@ -1,0 +1,16 @@
+{
+  "name": "Rendición de gastos — Pourtau",
+  "short_name": "Gastos",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#EDEAE0",
+  "theme_color": "#EDEAE0",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
